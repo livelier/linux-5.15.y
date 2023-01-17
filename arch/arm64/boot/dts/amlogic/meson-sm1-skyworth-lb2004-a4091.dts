@@ -220,35 +220,27 @@
 
 /* SDIO */
 &sd_emmc_a {
+	max-frequency = <200000000>;
 	/delete-property/ cap-mmc-highspeed;
 	/delete-property/ cap-sd-highspeed;
 	sd-uhs-sdr104;
-	max-frequency = <200000000>;
 	no-mmc;
 	no-sd;
 };
 
 /* SD card */
-&sd_emmc_b {
-	status = "disabled";
-};
+/delete-node/ &sd_emmc_b;
 
 /* eMMC */
 &sd_emmc_c {
-	/delete-property/ cap-mmc-highspeed;
+	max-frequency = <200000000>;
 	/delete-property/ mmc-ddr-1_8v;
 	mmc-hs400-1_8v;
-	max-frequency = <200000000>;
 	no-sd;
 	no-sdio;
 };
 
 &cpu_opp_table {
-	opp-0667000000 {
-		opp-hz = /bits/ 64 <667000000>;
-		opp-microvolt = <780000>;
-	};
-
 	opp-1000000000 {
 		opp-microvolt = <800000>;
 	};
