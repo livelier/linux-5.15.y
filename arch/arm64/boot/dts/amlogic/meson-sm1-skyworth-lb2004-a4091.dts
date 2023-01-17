@@ -229,7 +229,9 @@
 };
 
 /* SD card */
-/delete-node/ &sd_emmc_b;
+&sd_emmc_b {
+	status = "disabled";
+};
 
 /* eMMC */
 &sd_emmc_c {
