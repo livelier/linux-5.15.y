@@ -8,13 +8,17 @@
 #include "meson-sm1-ugoos-x3.dts"
 
 / {
-	model = "Ugoos X3 @ 2208Mhz";
+	model = "Ugoos X3 Overclock@2208Mhz";
 };
 
 &cpu_opp_table {
+	opp-2100000000 {
+		opp-hz = /bits/ 64 <2100000000>;
+		opp-microvolt = <1020000>;
+	};
 
 	opp-2208000000 {
 		opp-hz = /bits/ 64 <2208000000>;
-		opp-microvolt = <1021000>;
+		opp-microvolt = <1020000>;
 	};
 };

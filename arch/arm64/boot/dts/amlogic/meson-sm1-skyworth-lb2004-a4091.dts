@@ -33,7 +33,7 @@
 
 	sound {
 		compatible = "amlogic,axg-sound-card";
-		model = "LB2004-A4091";
+		model = "SKYWORTH-LB2004";
 		audio-aux-devs = <&tdmout_b>;
 		audio-routing = "TDMOUT_B IN 0", "FRDDR_A OUT 1",
 				"TDMOUT_B IN 1", "FRDDR_B OUT 1",
@@ -170,7 +170,7 @@
 		reg = <0>;
 		max-speed = <1000>;
 
-		reset-assert-us = <30000>;
+		reset-assert-us = <10000>;
 		reset-deassert-us = <80000>;
 		reset-gpios = <&gpio GPIOZ_15 (GPIO_ACTIVE_LOW | GPIO_OPEN_DRAIN)>;
 
@@ -192,9 +192,7 @@
 	status = "okay";
 };
 
-&ir {
-	status = "disabled";
-};
+/delete-node/ &ir;
 
 &tdmif_b {
 	status = "okay";
@@ -210,23 +208,6 @@
 
 &uart_A {
 	status = "disabled";
-	pinctrl-0 = <&uart_a_pins>, <&uart_a_cts_rts_pins>;
-	pinctrl-names = "default";
-	uart-has-rtscts;
-
-	bluetooth: bluetooth {
-		compatible = "realtek,rtl8822cs-bt";
-		interrupt-parent = <&gpio_intc>;
-		interrupts = <95 IRQ_TYPE_LEVEL_HIGH>;
-		interrupt-names = "host-wakeup";
-		shutdown-gpios = <&gpio GPIOX_17 GPIO_ACTIVE_HIGH>;
-		max-speed = <2000000>;
-		clocks = <&wifi32k>;
-		clock-names = "lpo";
-		vbat-supply = <&vddao_3v3>;
-		vddio-supply = <&vddio_ao1v8>;
-		status = "disabled";
-	};
 };
 
 &mali {
@@ -239,12 +220,12 @@
 
 /* SDIO */
 &sd_emmc_a {
-	sd-uhs-sdr12;
-	sd-uhs-sdr25;
-	sd-uhs-ddr50;
-	sd-uhs-sdr50;
+	max-frequency = <200000000>;
+	/delete-property/ cap-mmc-highspeed;
+	/delete-property/ cap-sd-highspeed;
 	sd-uhs-sdr104;
-	max-frequency = <208000000>;
+	no-mmc;
+	no-sd;
 };
 
 /* SD card */
@@ -254,15 +235,51 @@
 
 /* eMMC */
 &sd_emmc_c {
-	mmc-sdr-1_8v;
 	max-frequency = <200000000>;
+	/delete-property/ mmc-ddr-1_8v;
+	mmc-hs400-1_8v;
+	no-sd;
+	no-sdio;
 };
 
 &cpu_opp_table {
-	opp-2016000000 {
-		opp-hz = /bits/ 64 <2016000000>;
-		opp-microvolt = <1000000>;
+	opp-1000000000 {
+		opp-microvolt = <800000>;
 	};
+
+	opp-1200000000 {
+		opp-microvolt = <810000>;
+	};
+
+	opp-1404000000 {
+		opp-microvolt = <820000>;
+	};
+
+	opp-1500000000 {
+		opp-microvolt = <830000>;
+	};
+
+	opp-1608000000 {
+		opp-microvolt = <860000>;
+	};
+
+	opp-1704000000 {
+		opp-microvolt = <900000>;
+	};
+
+	opp-1800000000 {
+		opp-microvolt = <940000>;
+	};
+
+	opp-1908000000 {
+		opp-microvolt = <980000>;
+	};
+
+	opp-2016000000 {
+		opp-microvolt = <1020000>;
+	};
+
+	/delete-node/ opp-2100000000;
 };
 
 &efuse {

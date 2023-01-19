@@ -11,7 +11,7 @@
 #include <dt-bindings/sound/meson-g12a-tohdmitx.h>
 
 / {
-	compatible = "amlogic,sm1";
+	compatible = "ugoos,x3", "amlogic,s905x3", "amlogic,sm1";
 	model = "Ugoos X3";
 
 	aliases {
@@ -130,9 +130,9 @@
 
 	pinctrl-0 = <&eth_pins>, <&eth_rgmii_pins>;
 	pinctrl-names = "default";
-	phy-mode = "rgmii";
 	phy-handle = <&external_phy>;
 
+	phy-mode = "rgmii";
 	amlogic,tx-delay-ns = <2>;
 
 	snps,aal;
@@ -241,17 +241,12 @@
 
 /* SDIO */
 &sd_emmc_a {
-	/delete-property/ sd-uhs-sdr104;
-	sd-uhs-sdr12;
-	sd-uhs-sdr25;
-	sd-uhs-sdr50;
-	max-frequency = <100000000>;
-
-        //sd-uhs-ddr50;
-	//max-frequency = <50000000>;
-
-	//sd-uhs-sdr104;
-	//max-frequency = <200000000>;
+	max-frequency = <200000000>;
+	/delete-property/ cap-mmc-highspeed;
+	/delete-property/ cap-sd-highspeed;
+	sd-uhs-sdr104;
+	no-mmc;
+	no-sd;
 };
 
 /* SD card */
@@ -263,18 +258,50 @@
 /* eMMC */
 &sd_emmc_c {
 	max-frequency = <200000000>;
+	/delete-property/ mmc-ddr-1_8v;
+	mmc-hs400-1_8v;
+	no-sd;
+	no-sdio;
 };
 
 &cpu_opp_table {
-	opp-2016000000 {
-		opp-hz = /bits/ 64 <2016000000>;
-		opp-microvolt = <1000000>;
+	opp-1000000000 {
+		opp-microvolt = <800000>;
 	};
 
-	opp-2100000000 {
-		opp-hz = /bits/ 64 <2100000000>;
-		opp-microvolt = <1011000>;
+	opp-1200000000 {
+		opp-microvolt = <810000>;
 	};
+
+	opp-1404000000 {
+		opp-microvolt = <820000>;
+	};
+
+	opp-1500000000 {
+		opp-microvolt = <830000>;
+	};
+
+	opp-1608000000 {
+		opp-microvolt = <860000>;
+	};
+
+	opp-1704000000 {
+		opp-microvolt = <900000>;
+	};
+
+	opp-1800000000 {
+		opp-microvolt = <940000>;
+	};
+
+	opp-1908000000 {
+		opp-microvolt = <980000>;
+	};
+
+	opp-2016000000 {
+		opp-microvolt = <1020000>;
+	};
+
+	/delete-node/ opp-2100000000;
 };
 
 &efuse {
