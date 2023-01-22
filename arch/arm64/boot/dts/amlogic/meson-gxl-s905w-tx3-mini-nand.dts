@@ -137,6 +137,37 @@
 };
 
 &pinctrl_periphs {
+	nand_dqs_pins: nand_dqs_pins {
+		mux {
+			groups = "emmc_nand_d0",
+				"emmc_nand_d1",
+				"emmc_nand_d2",
+				"emmc_nand_d3",
+				"emmc_nand_d4",
+				"emmc_nand_d5",
+				"emmc_nand_d6",
+				"emmc_nand_d7",
+				"nand_dqs";
+			function = "nand";
+			bias-pull-down;
+		};
+	};
+
+	nand_pins: nand_pins {
+		mux-0 {
+			groups = "nand_ce0",
+				"nand_rb0";
+			function = "nand";
+			bias-pull-up;
+		};
+
+		mux-1 {
+			groups = "nand_wen_clk";
+			function = "nand";
+			bias-disable;
+		};
+	};
+
 	all_nand_pins: all_nand_pins {
 		mux {
 			groups = "emmc_nand_d0",
@@ -148,10 +179,13 @@
 				"emmc_nand_d6",
 				"emmc_nand_d7",
 				"nand_ce0",
+				"nand_ce1",
+				"nand_rb0",
 				"nand_ale",
 				"nand_cle",
 				"nand_wen_clk",
-				"nand_ren_wr";
+				"nand_ren_wr",
+				"nand_dqs";
 			function = "nand";
 			input-enable;
 		};
@@ -159,7 +193,8 @@
 
 	nand_cs_pins: nand_cs {
 		mux {
-			groups = "nand_ce0";
+			groups = "nand_ce0",
+				"nand_ce1";
 			function = "nand";
 		};
 	};
@@ -167,42 +202,37 @@
 
 &apb {
 	mtd_nand: nfc@74800 {
-		compatible = "amlogic,meson-nfc-full-ecc";
-		pinctrl-names = "nand_norb_mod","nand_cs_only";
-		pinctrl-0 = <&all_nand_pins>;
-		pinctrl-1 = <&nand_cs_pins>;
-		bl_mode = <1>;
-		fip_copies = <4>;
-		fip_size = <0x200000>;
-		ship_bad_block = <1>;
+		compatible = "amlogic,meson-axg-nfc";
 		status = "okay";
+
+		reg = <0x74800 0x200>, <0x74000 0x800>;
+		reg-name = "nfc", "emmc";
+
+		interrupts = <GIC_SPI 34 IRQ_TYPE_EDGE_RISING>;
+		clocks = <&clkc CLKID_SD_EMMC_C>, <&clkc CLKID_FCLK_DIV2>;
+		clock-names = "core", "device";
+
+		pinctrl-names = "default";
+		pinctrl-0 = <&nand_dqs_pins>, <&nand_pins>, <&all_nand_pins>;
+		pinctrl-1 = <&nand_dqs_pins>, <&nand_pins>, <&all_nand_pins>;
+		pinctrl-2 = <&nand_cs_pins>;
+
 		#address-cells = <1>;
 		#size-cells = <0>;
-		reg = <0x0 0x74800 0x0 0x200>;
-		interrupts = <GIC_SPI 34 IRQ_TYPE_EDGE_RISING>;
 
-		clocks = <&clkc CLKID_SD_EMMC_C>,
-				 <&clkc CLKID_FCLK_DIV2>;
-		clock-names = "gate", "fdiv2pll";
-		nand_clk_ctrl = <0xFFE07000>;
+	       /*
+		*bl_mode = <1>;
+		*fip_copies = <4>;
+		*fip_size = <0x200000>;
+		*ship_bad_block = <1>;
+		*nand_clk_ctrl = <0xFFE07000>;
+		*/
 
-		nand@bootloader {
+		nand@0 {
 			reg = <0>;
 			#address-cells = <1>;
 			#size-cells = <1>;
-			nand-ecc-maximize;
-
-			partition@0 {
-				label = "bootloader";
-				reg = <0x0 0x00000000>;
-			};
-		};
-
-		nand@normal {
-			reg = <0>;
-			#address-cells = <1>;
-			#size-cells = <1>;
-			nand-ecc-maximize;
+			/* nand-ecc-maximize; */
 
 			partition@0 {
 				label = "tpl";
