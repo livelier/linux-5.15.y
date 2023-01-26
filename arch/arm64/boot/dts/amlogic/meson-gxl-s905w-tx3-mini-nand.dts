@@ -206,6 +206,9 @@
 	};
 };
 
+#include <dt-bindings/clock/axg-clkc.h>
+#include <dt-bindings/interrupt-controller/arm-gic.h>
+
 &apb {
 	sd_emmc_c_clkc: mmc@75000 {
 		compatible = "amlogic,meson-axg-mmc-clkc", "syscon";
@@ -223,14 +226,8 @@
 		//clocks = <&clkc CLKID_SD_EMMC_C>, <&clkc CLKID_FCLK_DIV2>;
 		//clock-names = "core", "device";
 
-		clocks = <&clkc CLKID_SD_EMMC_C>, <&clkc CLKID_FCLK_DIV2>, <&clkc CLKID_MMC_PHASE_RX>, <&clkc CLKID_MMC_PHASE_TX>;
+		clocks = <&clkc CLKID_SD_EMMC_C>, <&sd_emmc_c_clkc CLKID_MMC_DIV>, <&sd_emmc_c_clkc CLKID_MMC_PHASE_RX>, <&sd_emmc_c_clkc CLKID_MMC_PHASE_TX>;
 		clock-names = "core", "device", "rx", "tx";
-
-		//clocks = <&clkc CLKID_SD_EMMC_C>,
-		//	<&sd_emmc_c_clkc CLKID_MMC_DIV>,
-		//	<&sd_emmc_c_clkc CLKID_MMC_PHASE_RX>,
-		//	<&sd_emmc_c_clkc CLKID_MMC_PHASE_TX>;
-		//clock-names = "core", "device", "rx", "tx";
 		amlogic,mmc-syscon = <&sd_emmc_c_clkc>;
 
 		pinctrl-names = "default";
