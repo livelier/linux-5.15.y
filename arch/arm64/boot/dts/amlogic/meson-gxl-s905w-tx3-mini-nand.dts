@@ -212,7 +212,7 @@
 		compatible = "amlogic,meson-axg-nfc";
 		status = "okay";
 
-		reg = <0x0 0x74800 0x0 0x200>;
+		reg = <0x0 0x75800 0x0 0x200>;
 		reg-name = "nfc", "emmc";
 
 		interrupts = <GIC_SPI 34 IRQ_TYPE_EDGE_RISING>;
