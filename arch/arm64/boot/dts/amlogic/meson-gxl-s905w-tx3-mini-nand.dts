@@ -136,6 +136,10 @@
 	dr_mode = "host";
 };
 
+&sd_emmc_c {
+	status = "disabled";
+};
+
 &pinctrl_periphs {
 /*
 	nand_dqs_pins: nand_dqs_pins {
@@ -216,8 +220,11 @@
 		reg-name = "nfc", "emmc";
 
 		interrupts = <GIC_SPI 34 IRQ_TYPE_EDGE_RISING>;
-		clocks = <&clkc CLKID_SD_EMMC_C>, <&clkc CLKID_FCLK_DIV2>;
-		clock-names = "core", "device";
+		//clocks = <&clkc CLKID_SD_EMMC_C>, <&clkc CLKID_FCLK_DIV2>;
+		//clock-names = "core", "device";
+
+		clocks = <&clkc CLKID_SD_EMMC_C>, <&clkc CLKID_FCLK_DIV2>, <&clkc CLKID_MMC_PHASE_RX>, <&clkc CLKID_MMC_PHASE_TX>;
+		clock-names = "core", "device", "rx", "tx";
 
 		//clocks = <&clkc CLKID_SD_EMMC_C>,
 		//	<&sd_emmc_c_clkc CLKID_MMC_DIV>,
