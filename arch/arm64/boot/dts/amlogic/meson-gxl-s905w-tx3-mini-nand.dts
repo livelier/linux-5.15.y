@@ -137,6 +137,7 @@
 };
 
 &pinctrl_periphs {
+/*
 	nand_dqs_pins: nand_dqs_pins {
 		mux {
 			groups = "emmc_nand_d0",
@@ -167,6 +168,7 @@
 			bias-disable;
 		};
 	};
+*/
 
 	all_nand_pins: all_nand_pins {
 		mux {
@@ -201,20 +203,32 @@
 };
 
 &apb {
-	mtd_nand: nfc@74800 {
+	sd_emmc_c_clkc: mmc@75000 {
+		compatible = "amlogic,meson-axg-mmc-clkc", "syscon";
+		reg = <0x0 0x75000 0x0 0x800>;
+	};
+
+	mtd_nand: nfc@75800 {
 		compatible = "amlogic,meson-axg-nfc";
 		status = "okay";
 
-		reg = <0x74800 0x200>, <0x74000 0x800>;
+		reg = <0x0 0x74800 0x0 0x200>;
 		reg-name = "nfc", "emmc";
 
 		interrupts = <GIC_SPI 34 IRQ_TYPE_EDGE_RISING>;
-		clocks = <&clkc CLKID_SD_EMMC_C>, <&clkc CLKID_FCLK_DIV2>;
-		clock-names = "core", "device";
+		//clocks = <&clkc CLKID_SD_EMMC_C>, <&clkc CLKID_FCLK_DIV2>;
+		//clock-names = "core", "device";
+
+		clocks = <&clkc CLKID_SD_EMMC_C>,
+			<&sd_emmc_c_clkc CLKID_MMC_DIV>,
+			<&sd_emmc_c_clkc CLKID_MMC_PHASE_RX>,
+			<&sd_emmc_c_clkc CLKID_MMC_PHASE_TX>;
+		clock-names = "core", "device", "rx", "tx";
+		amlogic,mmc-syscon = <&sd_emmc_c_clkc>;
 
 		pinctrl-names = "default";
-		pinctrl-0 = <&nand_dqs_pins>, <&nand_pins>, <&all_nand_pins>;
-		pinctrl-1 = <&nand_dqs_pins>, <&nand_pins>, <&all_nand_pins>;
+		pinctrl-0 = <&all_nand_pins>;
+		pinctrl-1 = <&all_nand_pins>;
 		pinctrl-2 = <&nand_cs_pins>;
 
 		#address-cells = <1>;
