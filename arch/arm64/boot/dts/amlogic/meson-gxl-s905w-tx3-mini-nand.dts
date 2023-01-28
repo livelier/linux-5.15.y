@@ -206,29 +206,32 @@
 	};
 };
 
-#include <dt-bindings/clock/axg-clkc.h>
+/* 
+#include <dt-bindings/clock/gxbb-clkc.h>
 #include <dt-bindings/interrupt-controller/arm-gic.h>
+*/
 
 &apb {
+/*
 	sd_emmc_c_clkc: mmc@75000 {
-		compatible = "amlogic,meson-axg-mmc-clkc", "syscon";
+		compatible = "amlogic,meson-gxl-mmc-clkc", "syscon";
 		reg = <0x0 0x75000 0x0 0x800>;
 	};
-
-	mtd_nand: nfc@75800 {
-		compatible = "amlogic,meson-axg-nfc";
+*/
+	mtd_nand: nand@75800 {
+		compatible = "amlogic,meson-gxl-nfc";
 		status = "okay";
 
-		reg = <0x0 0x75800 0x0 0x200>;
+		reg = <0x0 0x75800 0x0 0x200>, <0x0 0x75000 0x0 0x800>;
 		reg-name = "nfc", "emmc";
 
 		interrupts = <GIC_SPI 34 IRQ_TYPE_EDGE_RISING>;
 		//clocks = <&clkc CLKID_SD_EMMC_C>, <&clkc CLKID_FCLK_DIV2>;
 		//clock-names = "core", "device";
 
-		clocks = <&clkc CLKID_SD_EMMC_C>, <&sd_emmc_c_clkc CLKID_MMC_DIV>, <&sd_emmc_c_clkc CLKID_MMC_PHASE_RX>, <&sd_emmc_c_clkc CLKID_MMC_PHASE_TX>;
-		clock-names = "core", "device", "rx", "tx";
-		amlogic,mmc-syscon = <&sd_emmc_c_clkc>;
+		clocks = <&clkc CLKID_NAND>, <&clkc CLKID_FCLK_DIV2>;
+		clock-names = "core", "device";
+		/*amlogic,mmc-syscon = <&sd_emmc_c_clkc>;*/
 
 		pinctrl-names = "default";
 		pinctrl-0 = <&all_nand_pins>;
